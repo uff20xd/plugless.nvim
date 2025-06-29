@@ -4,7 +4,7 @@ local config_root = fn.stdpath("config")
 
 M = {}
 M.plugins = {
-
+  {name = "", address = "", load = true}
 }
 M.colorschemes = {
 
@@ -14,11 +14,17 @@ function get_git (dir, address)
   os.execute("git clone " .. address .. " " .. dir)
 end
 
-function handle_colourschemes ()
-
+M.install = function () 
+  
 end
 
 M.start = function () 
+
+  vim.api.nvim_create_user_command(
+      "PluglessInstall", -- string
+      M.install(),  -- string or Lua function
+      {attributes} -- table
+  )
   
   --adds basic runtime paths
   local lua_paths = {
@@ -43,7 +49,7 @@ M.start = function ()
   --sources all the config files
 
   for plugin in M.plugins do
-    require("config."plugin.name)
+    require("config." .. plugin.name)
   end
 
   -- pregiven config files
